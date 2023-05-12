@@ -17,10 +17,10 @@ def load_with_converter(path, precision, batch_size):
     """
 
     params = copy.deepcopy(trt.DEFAULT_TRT_CONVERSION_PARAMS)
-    if precision == 'int8':
-        precision_mode = trt.TrtPrecisionMode.INT8
-    elif precision == 'fp16':
+    if precision == 'fp16':
         precision_mode = trt.TrtPrecisionMode.FP16
+    elif precision == 'int8':
+        precision_mode = trt.TrtPrecisionMode.INT8
     else:
         precision_mode = trt.TrtPrecisionMode.FP32
 
@@ -37,12 +37,10 @@ def load_with_converter(path, precision, batch_size):
     pprint.pprint(params)
     print("%" * 85)
 
-    converter = trt.TrtGraphConverterV2(
+    return trt.TrtGraphConverterV2(
         input_saved_model_dir=path,
         conversion_params=params,
     )
-
-    return converter
 
 
 if __name__ == "__main__":

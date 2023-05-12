@@ -179,22 +179,20 @@ class BaseCommandLineAPI(object):
         )
 
     def _add_bool_argument(self, name=None, default=False, required=False, help=None):
-            if not isinstance(default, bool):
-                raise ValueError()
+        if not isinstance(default, bool):
+            raise ValueError()
 
-            feature_parser = self._parser.add_mutually_exclusive_group(\
+        feature_parser = self._parser.add_mutually_exclusive_group(\
                 required=required
-            )
+        )
 
-            feature_parser.add_argument('--' + name, dest=name,
-                                        action='store_true',
-                                        help=help,
-                                        default=default)
+        feature_parser.add_argument(
+            f'--{name}', dest=name, action='store_true', help=help, default=default
+        )
 
-            feature_parser.add_argument('--no' + name, dest=name,
-                                        action='store_false')
+        feature_parser.add_argument(f'--no{name}', dest=name, action='store_false')
 
-            feature_parser.set_defaults(name=default)
+        feature_parser.set_defaults(name=default)
 
     def _validate_args(self, args):
 
@@ -202,17 +200,17 @@ class BaseCommandLineAPI(object):
             raise ValueError("--data_dir is required")
 
         elif not os.path.isdir(args.data_dir):
-            raise RuntimeError("The path --data_dir=`{}` doesn't exist or is "
-                               "not a directory".format(args.data_dir))
+            raise RuntimeError(
+                f"The path --data_dir=`{args.data_dir}` doesn't exist or is not a directory"
+            )
 
         if (
             args.num_iterations is not None and
             args.num_iterations <= args.num_warmup_iterations
         ):
             raise ValueError(
-                '--num_iterations must be larger than --num_warmup_iterations '
-                '({} <= {})'.format(args.num_iterations,
-                                    args.num_warmup_iterations))
+                f'--num_iterations must be larger than --num_warmup_iterations ({args.num_iterations} <= {args.num_warmup_iterations})'
+            )
 
         if not args.use_tftrt:
             if args.use_dynamic_shape:
@@ -228,11 +226,9 @@ class BaseCommandLineAPI(object):
                 raise ValueError("--use_xla flag is not supported with TF-TRT.")
 
             if args.precision not in self.ALLOWED_TFTRT_PRECISION_MODES:
-                raise ValueError("The received --precision={} is not supported."
-                                 " Allowed: {}".format(
-                                    args.precision,
-                                    self.ALLOWED_TFTRT_PRECISION_MODES
-                ))
+                raise ValueError(
+                    f"The received --precision={args.precision} is not supported. Allowed: {self.ALLOWED_TFTRT_PRECISION_MODES}"
+                )
 
             if args.precision == 'INT8':
 
@@ -241,9 +237,9 @@ class BaseCommandLineAPI(object):
                                      'precision mode')
 
                 elif not os.path.isdir(args.calib_data_dir):
-                    raise RuntimeError("The path --calib_data_dir=`{}` doesn't "
-                                       "exist or is not a directory".format(
-                                            args.calib_data_dir))
+                    raise RuntimeError(
+                        f"The path --calib_data_dir=`{args.calib_data_dir}` doesn't exist or is not a directory"
+                    )
 
                 if args.use_dynamic_shape:
                     raise ValueError('TF-TRT does not support dynamic shape '
@@ -251,9 +247,8 @@ class BaseCommandLineAPI(object):
 
                 if args.num_calib_inputs <= args.batch_size:
                     raise ValueError(
-                        '--num_calib_inputs must not be smaller than '
-                        '--batch_size ({} <= {})'.format(
-                        args.num_calib_inputs, args.batch_size))
+                        f'--num_calib_inputs must not be smaller than --batch_size ({args.num_calib_inputs} <= {args.batch_size})'
+                    )
 
     def _post_process_args(self, args):
 

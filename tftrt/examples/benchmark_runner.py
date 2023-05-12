@@ -38,7 +38,7 @@ def _print_dict(input_dict, prefix='  ', postfix=''):
 
 @contextmanager
 def _timed_section(msg):
-    print('\n[START] {}'.format(msg))
+    print(f'\n[START] {msg}')
     start_time = time.time()
     yield
     print("[END] Duration: {:.1f}s".format(time.time() - start_time))
@@ -182,12 +182,12 @@ class BaseBenchmarkRunner(object, metaclass=abc.ABCMeta):
             if output_tensor_names is None:
                 output_tensor_names = list(structured_outputs.keys())
             else:
-                output_tensor_names = [n for n in output_tensor_names.split(",")]
+                output_tensor_names = list(output_tensor_names.split(","))
                 for name in output_tensor_names:
                     if name not in structured_outputs.keys():
                         raise ValueError(
                           f"Unknown output_tensor_names received: {name}. " \
-                          f"Authorized: {structured_outputs.keys()}")
+                              f"Authorized: {structured_outputs.keys()}")
 
             self._output_tensors = output_tensor_names
 

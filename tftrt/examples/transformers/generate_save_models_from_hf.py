@@ -87,11 +87,7 @@ if __name__ == "__main__":
 
         if model_name.startswith("bert"):
             is_encoder_decoder = False
-            if "uncased" in model_name:
-                vocab_size = 30522
-            else:
-                vocab_size = 28996
-
+            vocab_size = 30522 if "uncased" in model_name else 28996
             model = TFBertForPreTraining.from_pretrained(
                 model_name, cache_dir=model_cache_dir, **model_kwargs
             )
@@ -142,7 +138,7 @@ if __name__ == "__main__":
 
         for key, val in np_arrays_to_save.items():
             print("saving:", key, "...")
-            arr_save_path = os.path.join(numpy_asset_dir, '%s.npy' % key)
+            arr_save_path = os.path.join(numpy_asset_dir, f'{key}.npy')
             np.save(arr_save_path, val)
             assert(np.allclose(np.load(arr_save_path), val))
 

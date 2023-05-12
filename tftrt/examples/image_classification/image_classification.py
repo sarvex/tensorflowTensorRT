@@ -175,12 +175,12 @@ if __name__ == '__main__':
         if data_dir is None:
             return []
 
-        files = tf.io.gfile.glob(os.path.join(data_dir, filename_pattern))
-
-        if not files:
-            raise ValueError('Can not find any files in {} with '
-                             'pattern "{}"'.format(data_dir, filename_pattern))
-        return files
+        if files := tf.io.gfile.glob(os.path.join(data_dir, filename_pattern)):
+            return files
+        else:
+            raise ValueError(
+                f'Can not find any files in {data_dir} with pattern "{filename_pattern}"'
+            )
 
     data_files = get_files(args.data_dir, 'validation*')
 
